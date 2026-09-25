@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cook-Off Dish Cards - Print</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: letter portrait;
+    margin: 0.4in;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+    color: #1a2a24;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .controls {
+    text-align: center;
+    padding: 14px 16px;
+    background: #eef2ed;
+    border-bottom: 1px solid #ccd6ce;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn {
+    background: #e0930c;
+    color: #1d1400;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  .btn:hover {
+    background: #c98205;
+  }
+  .status-text {
+    font-size: 0.9rem;
+    color: #4f635c;
+    font-weight: 600;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 5in;
+    gap: 0.3in;
+    padding: 0.2in;
+    page-break-inside: auto;
+  }
+
+  .card {
+    border: 2px dashed #9aa8a1;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #ffffff;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .card-header {
+    border-bottom: 2px solid #e2e8e4;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+
+  .card-top-tag {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: #5b7067;
+    margin-bottom: 4px;
+  }
+
+  .dish-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #112620;
+    margin: 0 0 4px 0;
+  }
+
+  .chef-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #63776f;
+  }
+
+  .dish-desc {
+    font-size: 0.92rem;
+    line-height: 1.4;
+    color: #2b3e37;
+    margin: 8px 0;
+    flex-grow: 1;
+  }
+
+  .allergen-box {
+    background: #fdf3f2;
+    border: 1.5px solid #e8958f;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+  }
+
+  .allergen-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #a7231c;
+    margin-bottom: 2px;
+  }
+
+  .allergen-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #7d1510;
+    margin: 0;
+  }
+
+  @media print {
+    .controls {
+      display: none;
+    }
+    .cards-grid {
+      padding: 0;
+      gap: 0.3in;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="btn" onclick="fetchDishes()">🔄 Refresh Data</button>
+  <button class="btn" onclick="window.print()">🖨️ Print Cards</button>
+  <span id="load-status" class="status-text">Connecting to sheet...</span>
+</div>
+
+<div class="cards-grid" id="grid"></div>
+
+<script>
+var FETCH_URL = 'https://script.google.com/macros/s/AKfycbyF7xlGvMbPOkdXnZi7BXVQn0byEs69SvEE6qOoL_9fBO652LE9IP1SfrSueyGsnJk/exec';
+
+function esc(s) {
+  return String(s || '').replace(/[&<>"]/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+
+function renderCards(dishes) {
+  var grid = document.getElementById('grid');
+  if (!dishes || !dishes.length) {
+    grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: #555;">No dishes found in the registration sheet.</p>';
+    return;
+  }
+
+  var html = '';
+  dishes.forEach(function(d) {
+    html += '<div class="card">';
+    html += '  <div>';
+    html += '    <div class="card-header">';
+    html += '      <div class="card-top-tag">';
+    html += '        <span>Dish #' + esc(d.id) + '</span>';
+    html += '        <span>' + esc(d.lab || 'Cook-off Entry') + '</span>';
+    html += '      </div>';
+    html += '      <h2 class="dish-title">' + esc(d.dishName) + '</h2>';
+    if (d.chef) {
+      html += '      <div class="chef-name">Prepared by: ' + esc(d.chef) + '</div>';
+    }
+    html += '    </div>';
+    html += '    <p class="dish-desc">' + esc(d.description || 'No description provided.') + '</p>';
+    html += '  </div>';
+    html += '  <div class="allergen-box">';
+    html += '    <span class="allergen-label">⚠️ Possible Allergens</span>';
+    html += '    <p class="allergen-text">' + esc(d.allergens || 'None reported') + '</p>';
+    html += '  </div>';
+    html += '</div>';
+  });
+
+  grid.innerHTML = html;
+}
+
+window.onDishesLoaded = function(res) {
+  var list = (res && res.dishes) ? res.dishes : (Array.isArray(res) ? res : []);
+  document.getElementById('load-status').textContent = 'Loaded ' + list.length + ' dishes.';
+  renderCards(list);
+  var old = document.getElementById('jsonp-fetch');
+  if (old) old.remove();
+};
+
+function fetchDishes() {
+  document.getElementById('load-status').textContent = 'Fetching latest registrations...';
+  var old = document.getElementById('jsonp-fetch');
+  if (old) old.remove();
+
+  var script = document.createElement('script');
+  script.id = 'jsonp-fetch';
+  script.src = FETCH_URL + '?callback=onDishesLoaded&_=' + Date.now();
+  script.onerror = function() {
+    document.getElementById('load-status').textContent = 'Unable to reach Apps Script. Check network or deployment access.';
+  };
+  document.body.appendChild(script);
+}
+
+// Initial fetch on page load
+fetchDishes();
+</script>
+</body>
+</html>
