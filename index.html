@@ -8,7 +8,7 @@
 <style>
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 12mm;
   }
   * {
     box-sizing: border-box;
@@ -37,8 +37,8 @@
     background: #e0930c;
     color: #1d1400;
     font-weight: 800;
-    font-size: 0.95rem;
-    padding: 10px 20px;
+    font-size: 1rem;
+    padding: 10px 22px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -48,88 +48,89 @@
     background: #c98205;
   }
   .status-text {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: #4f635c;
     font-weight: 600;
   }
 
   .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 133mm;
-    gap: 8mm;
-    padding: 0;
-    page-break-inside: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12mm;
+    padding: 12mm;
   }
 
   .card {
-    height: 133mm;
-    border: 2.5px dashed #8fa39a;
-    border-radius: 12px;
-    padding: 14px 18px;
+    border: 3px dashed #8fa39a;
+    border-radius: 16px;
+    padding: 28px 32px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background: #ffffff;
     page-break-inside: avoid;
     break-inside: avoid;
-    overflow: hidden;
+    margin-bottom: 10mm;
   }
 
   .card-header {
-    border-bottom: 2px solid #e2e8e4;
-    padding-bottom: 6px;
-    margin-bottom: 6px;
+    border-bottom: 3px solid #e2e8e4;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    text-align: center;
   }
 
   .card-top-tag {
-    font-size: 0.9rem;
+    font-size: 1.25rem;
     text-transform: uppercase;
     font-weight: 800;
     letter-spacing: 0.06em;
     color: #e0930c;
-    margin-bottom: 2px;
+    margin-bottom: 8px;
+    text-align: center;
   }
 
+  /* Centered and enlarged dish title */
   .dish-title {
-    font-size: 1.75rem;
+    font-size: 3.4rem;
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.1;
     color: #112620;
     margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
+    text-align: center;
   }
 
+  /* Centered and enlarged description */
   .dish-desc {
-    font-size: 1.38rem;
+    font-size: 2.5rem;
     line-height: 1.35;
     color: #24352f;
-    margin: 6px 0 0 0;
+    margin: 16px 0 24px 0;
     font-weight: 600;
-    flex-grow: 1;
-    overflow: hidden;
+    text-align: center;
   }
 
   .allergen-box {
     background: #fdf3f2;
-    border: 1.5px solid #e8958f;
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin-top: 6px;
+    border: 2px solid #e8958f;
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: left;
   }
 
   .allergen-label {
     display: block;
-    font-size: 0.78rem;
+    font-size: 1.1rem;
     text-transform: uppercase;
     font-weight: 800;
     letter-spacing: 0.05em;
     color: #a7231c;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
 
   .allergen-text {
-    font-size: 0.95rem;
+    font-size: 1.45rem;
     font-weight: 700;
     color: #7d1510;
     margin: 0;
@@ -142,7 +143,10 @@
     }
     .cards-grid {
       padding: 0;
-      gap: 8mm;
+      gap: 0;
+    }
+    .card {
+      margin-bottom: 14mm;
     }
   }
 </style>
@@ -169,7 +173,7 @@ function esc(s) {
 function renderCards(dishes) {
   var grid = document.getElementById('grid');
   if (!dishes || !dishes.length) {
-    grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: #555;">No dishes found in the registration sheet.</p>';
+    grid.innerHTML = '<p style="text-align:center; padding: 40px; color: #555;">No dishes found in the registration sheet.</p>';
     return;
   }
 
