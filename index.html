@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cook-Off Dish Cards - Print</title>
+<title>Cook-Off Dish Cards - A4 Print</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   @page {
-    size: letter portrait;
-    margin: 0.4in;
+    size: A4 portrait;
+    margin: 10mm;
   }
   * {
     box-sizing: border-box;
@@ -55,23 +55,25 @@
 
   .cards-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 5in;
-    gap: 0.3in;
-    padding: 0.2in;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 133mm;
+    gap: 8mm;
+    padding: 0;
     page-break-inside: auto;
   }
 
   .card {
-    border: 2px dashed #9aa8a1;
+    height: 133mm;
+    border: 2.5px dashed #8fa39a;
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background: #ffffff;
     page-break-inside: avoid;
     break-inside: avoid;
+    overflow: hidden;
   }
 
   .card-header {
@@ -81,61 +83,57 @@
   }
 
   .card-top-tag {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
     font-weight: 800;
-    letter-spacing: 0.05em;
-    color: #5b7067;
+    letter-spacing: 0.06em;
+    color: #e0930c;
     margin-bottom: 4px;
   }
 
   .dish-title {
-    font-size: 1.4rem;
+    font-size: 1.7rem;
     font-weight: 800;
-    line-height: 1.2;
+    line-height: 1.15;
     color: #112620;
-    margin: 0 0 4px 0;
-  }
-
-  .chef-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #63776f;
+    margin: 0;
+    letter-spacing: -0.02em;
   }
 
   .dish-desc {
-    font-size: 0.92rem;
-    line-height: 1.4;
+    font-size: 1.05rem;
+    line-height: 1.45;
     color: #2b3e37;
-    margin: 8px 0;
+    margin: 6px 0 0 0;
+    font-weight: 500;
     flex-grow: 1;
+    overflow: hidden;
   }
 
   .allergen-box {
     background: #fdf3f2;
     border: 1.5px solid #e8958f;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 8px 12px;
     margin-top: 8px;
   }
 
   .allergen-label {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
     font-weight: 800;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     color: #a7231c;
     margin-bottom: 2px;
   }
 
   .allergen-text {
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: #7d1510;
     margin: 0;
+    line-height: 1.3;
   }
 
   @media print {
@@ -144,7 +142,7 @@
     }
     .cards-grid {
       padding: 0;
-      gap: 0.3in;
+      gap: 8mm;
     }
   }
 </style>
@@ -153,7 +151,7 @@
 
 <div class="controls">
   <button class="btn" onclick="fetchDishes()">🔄 Refresh Data</button>
-  <button class="btn" onclick="window.print()">🖨️ Print Cards</button>
+  <button class="btn" onclick="window.print()">🖨️ Print Cards (A4)</button>
   <span id="load-status" class="status-text">Connecting to sheet...</span>
 </div>
 
@@ -180,14 +178,8 @@ function renderCards(dishes) {
     html += '<div class="card">';
     html += '  <div>';
     html += '    <div class="card-header">';
-    html += '      <div class="card-top-tag">';
-    html += '        <span>Dish #' + esc(d.id) + '</span>';
-    html += '        <span>' + esc(d.lab || 'Cook-off Entry') + '</span>';
-    html += '      </div>';
+    html += '      <div class="card-top-tag">Dish #' + esc(d.id) + '</div>';
     html += '      <h2 class="dish-title">' + esc(d.dishName) + '</h2>';
-    if (d.chef) {
-      html += '      <div class="chef-name">Prepared by: ' + esc(d.chef) + '</div>';
-    }
     html += '    </div>';
     html += '    <p class="dish-desc">' + esc(d.description || 'No description provided.') + '</p>';
     html += '  </div>';
@@ -223,7 +215,7 @@ function fetchDishes() {
   document.body.appendChild(script);
 }
 
-// Initial fetch on page load
+// Initial load
 fetchDishes();
 </script>
 </body>
